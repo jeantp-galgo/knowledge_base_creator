@@ -16,8 +16,8 @@ INSTRUCCIONES:
 DÓNDE BUSCAR: YouTube (comparaciones, reviews) | Reddit | Foros especializados | Blogs de usuarios | Comparaciones orgánicas entre usuarios
 
 FORMATO DE SALIDA OBLIGATORIO:
-6. Comparaciones naturales:
 
+[COMPARACIONES]
 Para cada modelo comparado de la lista, incluye:
 - Por qué los usuarios los comparan (precio similar, mismo segmento, alternativa considerada)
 - En qué gana el modelo principal ({marca} {modelo})

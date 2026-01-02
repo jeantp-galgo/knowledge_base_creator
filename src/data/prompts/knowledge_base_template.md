@@ -31,19 +31,50 @@ DEBES seguir ESTE proceso obligatorio:
 6. Es preferible declarar ausencia o duda que atribuir equipamiento incorrecto
 
 FORMATO DE SALIDA - Deep Sentiment Research:
-0. Segmento y tipo de moto: Tipo según BD: {tipo} | Segmento identificado por usuarios: [Nota solo si hay diferencia entre BD y percepción real]
-1. Sentimiento general: Resumen ejecutivo (máx. 4 líneas) sobre cómo es percibida la moto en {país}
-2. Sensaciones de manejo más mencionadas (incluye solo lo reportado de forma recurrente): Estabilidad | Vibraciones | Frenado (validado por país, ver regla crítica) | Postura y comodidad | Respuesta del acelerador | Confianza en ciudad y carretera
-3. Ventajas percibidas: Lista separada por frecuencia aproximada: Alta frecuencia (70%+) | Media frecuencia (40-70%) | Baja frecuencia (10-40%)
-4. Problemas o dolores más mencionados: Para cada problema incluye: Descripción clara | Frecuencia aproximada | Contexto específico (clima, altura, ciudad, uso) | Soluciones comunitarias (si existen). Si los usuarios mencionan la AUSENCIA de una tecnología (ej. ABS, FI), trátalo como problema, NO como característica presente
-5. Relación causa → efecto (clave): Describe cómo los usuarios conectan características con sensaciones reales. Ejemplo: Causa: Llanta trasera ancha | Efecto: Mayor estabilidad, menor agilidad en tráfico cerrado. Incluye solo relaciones mencionadas por los usuarios
-7. Percepción del rendimiento real (según segmento): Incluye siempre: Consumo real reportado | Comportamiento en lluvia | Uso urbano | Uso con pasajero. Luego prioriza según {tipo}. Si no hay datos: decláralo explícitamente
-8. Confiabilidad a largo plazo: Información disponible: Sí/No | Reportes de alto kilometraje (si existen) | Puntos de atención temprana | Si el modelo es reciente: indícalo claramente
-9. Valor de reventa y depreciación: Facilidad de venta | Nivel de depreciación percibido | Demanda en mercado de usados | Factores que afectan el valor
-10. Modificaciones y personalizaciones populares: Enfoca según segmento. Si no hay información: indícalo explícitamente
-11. Perfil del usuario típico: Edad aproximada | Uso principal | Nivel de experiencia | Motivación emocional de compra
-12. Opiniones divididas: Temas donde los usuarios no están de acuerdo (explica ambos bandos brevemente)
-13. Limitaciones de la investigación: Información escasa | Posibles sesgos | Regiones poco representadas | Aspectos no documentados
-14. Síntesis estratégica final (OBLIGATORIA): En 8-10 líneas, responde: * ¿Para quién es ideal esta moto en {país}? * ¿Para quién NO es recomendable? * ¿Qué la hace emocionalmente distinta? * ¿Qué concesión principal hace el comprador?
+
+[SEGMENTO]
+Tipo según BD: {tipo} | Segmento identificado por usuarios: [Nota solo si hay diferencia entre BD y percepción real]
+
+[SENTIMIENTO]
+Resumen ejecutivo (máx. 4 líneas) sobre cómo es percibida la moto en {país}
+
+[SENSACIONES]
+Incluye solo lo reportado de forma recurrente: Estabilidad | Vibraciones | Frenado (validado por país, ver regla crítica) | Postura y comodidad | Respuesta del acelerador | Confianza en ciudad y carretera
+
+[VENTAJAS]
+Lista separada por frecuencia aproximada:
+Alta frecuencia (70%+): ...
+Media frecuencia (40-70%): ...
+Baja frecuencia (10-40%): ...
+
+[PROBLEMAS]
+Para cada problema incluye: Descripción clara | Frecuencia aproximada | Contexto específico (clima, altura, ciudad, uso) | Soluciones comunitarias (si existen). Si los usuarios mencionan la AUSENCIA de una tecnología (ej. ABS, FI), trátalo como problema, NO como característica presente
+
+[CAUSA_EFECTO]
+Describe cómo los usuarios conectan características con sensaciones reales. Ejemplo: Causa: Llanta trasera ancha | Efecto: Mayor estabilidad, menor agilidad en tráfico cerrado. Incluye solo relaciones mencionadas por los usuarios
+
+[RENDIMIENTO]
+Incluye siempre: Consumo real reportado | Comportamiento en lluvia | Uso urbano | Uso con pasajero. Luego prioriza según {tipo}. Si no hay datos: decláralo explícitamente
+
+[CONFIABILIDAD]
+Información disponible: Sí/No | Reportes de alto kilometraje (si existen) | Puntos de atención temprana | Si el modelo es reciente: indícalo claramente
+
+[REVENTA]
+Facilidad de venta | Nivel de depreciación percibido | Demanda en mercado de usados | Factores que afectan el valor
+
+[MODIFICACIONES]
+Enfoca según segmento. Si no hay información: indícalo explícitamente
+
+[PERFIL_USUARIO]
+Edad aproximada | Uso principal | Nivel de experiencia | Motivación emocional de compra
+
+[OPINIONES_DIVIDIDAS]
+Temas donde los usuarios no están de acuerdo (explica ambos bandos brevemente)
+
+[LIMITACIONES]
+Información escasa | Posibles sesgos | Regiones poco representadas | Aspectos no documentados
+
+[SINTESIS]
+En 8-10 líneas, responde: * ¿Para quién es ideal esta moto en {país}? * ¿Para quién NO es recomendable? * ¿Qué la hace emocionalmente distinta? * ¿Qué concesión principal hace el comprador?
 
 RECORDATORIO FINAL: Este reporte debe servir para: (1) Ayudar a una persona real a decidir, (2) Alimentar una base de conocimiento para un chatbot, (3) Reflejar experiencia vivida, no marketing. Es mejor decir "NO tiene" o "no hay evidencia" que afirmar algo incorrecto.
