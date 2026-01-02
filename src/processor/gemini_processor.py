@@ -18,4 +18,5 @@ class GeminiProcessor:
         for output in interaction.outputs:
             if hasattr(output, "text"):
                 final_output += output.text
+        return final_output
 
