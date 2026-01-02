@@ -11,4 +11,5 @@ def get_basic_data_model(df:pd.DataFrame, pais:str) -> dict:
         "año": str(df["Año"].iloc[0]),
         "pais": pais,
         "tipo": str(df["Tipo"].iloc[0]),
+        "url": df["url"].iloc[0],
     }
