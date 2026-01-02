@@ -55,4 +55,6 @@ def extract_top_3_models_from_comparator(df_top_3_models:pd.DataFrame,
         for i, m in enumerate(modelos_comparados, 1):
             print(f"{i}. {m['marca']} {m['modelo']}")
 
+        print("Output: \n", modelos_comparados)
+
     return modelos_comparados
