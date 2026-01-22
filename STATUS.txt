@@ -28,7 +28,7 @@
 │  │  ┌─────────────────┐     ┌─────────────────┐                     │  │
 │  │  │ Publication     │     │ Top 3 Competitors│                    │  │
 │  │  │ Data Extractor  │     │ Extractor        │                    │  │
-│  │  │ ⏳ To Do       │     │ ⏳ To Do         │                    │  │
+│  │  │ COMPLETED       │     │ ⏳ To Do         │                    │  │
 │  │  └────────┬────────┘     └────────┬─────────┘                    │  │
 │  └───────────┼───────────────────────┼──────────────────────────────┘  │
 │              │                       │                                  │
@@ -40,7 +40,7 @@
 │  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │  │
 │  │  │ Research #1 │  │ Research #2 │  │ Research #N │               │  │
 │  │  │ Model Info  │  │ Comparisons │  │ ...         │               │  │
-│  │  │ ⏳ To Do    │  │ ⏳ To Do    │  │ ⏳ To Do    │              │  │
+│  │  │ COMPLETED   │  │ ⏳ To Do    │  │ ⏳ To Do    │              │  │
 │  │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘               │  │
 │  │         │                │                │                      │  │
 │  │         └────────────────┼────────────────┘                      │  │
@@ -63,7 +63,7 @@
 │  │  │  ├─ [VENTAJAS] [PROBLEMAS] [RENDIMIENTO]                │     │  │
 │  │  │  ├─ [CONFIABILIDAD] [REVENTA] [PERFIL_USUARIO]          │     │  │
 │  │  │  └─ [COMPARACIONES]                                     │     │  │
-│  │  │  ⏳ To Do                                                │     │  │
+│  │  │  ⏳ COMPLETED                                                │     │  │
 │  │  └─────────────────────────────────────────────────────────┘     │  │
 │  └──────────────────────────────────────────────────────────────────┘  │
 │                                                                         │
@@ -89,9 +89,6 @@
 │  PENDING DECISIONS                                                      │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  [ ] ¿Batch processing para múltiples modelos?                          │
-│  [ ] ¿Almacenamiento en DB o solo archivos .md?                         │
-│  [ ] ¿CLI o solo notebook?                                              │
 │  [ ] ¿Agregar imágenes del modelo al output?                            │
 │  [ ] ¿Manejo de errores si Gemini falla?                                │
 │                                                                         │
