@@ -4,6 +4,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 COUNTRY = "CO" # "MX", "CL", "CO"
+# Gemini settings
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+STORE_ID = os.getenv('STORE_ID')
+KNOWLEDGE_BASE_STORE_FILENAME = "base_conocimiento_chatbot.md"
+LAST_DOCUMENT_UPLOADED = "baseconocimientochatbotmd-0f1cpkw8a81j"
 
 # Directorio de la aplicación
 CURRENT_FILE = Path(__file__).resolve()
