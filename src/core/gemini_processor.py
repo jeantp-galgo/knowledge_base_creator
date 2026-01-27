@@ -15,8 +15,12 @@ class GeminiProcessor:
 
     def get_response(self, interaction) -> str:
         final_output = ""
-        for output in interaction.outputs:
-            if hasattr(output, "text"):
-                final_output += output.text
-        return final_output
+        try:
+            for output in interaction.outputs:
+                if hasattr(output, "text"):
+                    final_output += output.text
+            return final_output
+        except Exception as e:
+            # You could log the exception here if needed
+            return f"Error processing interaction outputs: {e}"
 
