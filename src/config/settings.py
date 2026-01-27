@@ -3,7 +3,9 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+# Configuración inicial
 COUNTRY = "CO" # "MX", "CL", "CO"
+
 # Gemini settings
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 STORE_ID = os.getenv('STORE_ID')
