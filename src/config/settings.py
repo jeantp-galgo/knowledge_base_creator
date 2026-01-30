@@ -23,6 +23,6 @@ MONGO_SETTINGS = {
 }
 
 # Base de inventario de cada país
-CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\history\CO\BaseCOv2.csv"
-MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\history\MX\BaseMXv5.csv"
-CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\history\CL-MOTORCYCLES\df_cl-motorcycles_history.csv"
+CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCO.csv"
+MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseMX.csv"
+CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCL.csv"
