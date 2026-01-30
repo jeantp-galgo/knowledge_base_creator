@@ -167,6 +167,25 @@ Guardar prompts como templates en `src/data/prompts/*.md` con variables tipo `{m
 #### ⚠️ Desventajas
 - Un archivo más que mantener sincronizado
 
+## ADR-007: Se elimina la transformación de datos de la base
+
+**Fecha:** 2026-01-30
+**Estado:** ✅ Activo
+
+### Contexto
+Anteriormente la base no venía con las columnas necesarías e incluso no tenía el filtro de las motos que se visualizan en el marketplace, entonces, se hacía todo acá mismo.
+
+### Decisión
+Desde el proyecto que actualiza diariamente la base de los países, se aplicó la limpieza para la base que recibe este proyecto.
+
+### Consecuencias
+#### ✅ Ventajas
+- No tener que limpiar el archivo recibido
+- Nombres de columnas estandarizadas
+
+#### ⚠️ Desventajas
+- no hay
+
 ---
 
 ## Template para nuevas decisiones
