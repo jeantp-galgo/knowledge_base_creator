@@ -6,10 +6,11 @@ def get_basic_data_model(df:pd.DataFrame, country:str) -> dict:
     """
     return {
         "code": df["code"].iloc[0],
-        "marca": df["Marca"].iloc[0],
-        "modelo": df["Modelo"].iloc[0],
-        "año": str(df["Año"].iloc[0]),
-        "pais": country,
-        "tipo": str(df["Tipo"].iloc[0]),
-        "url": df["url"].iloc[0],
+        "brand": df["brand"].iloc[0],
+        "model": df["model"].iloc[0],
+        "year": str(df["year"].iloc[0]),
+        "country": {"CO": "Colombia", "MX": "Mexico", "CL": "Chile"}.get(country, country),
+        "type": str(df["type"].iloc[0]),
+        "publication_url": df["publication_url"].iloc[0],
+        "publication_image_url": df["publication_image_url"].iloc[0],
     }
