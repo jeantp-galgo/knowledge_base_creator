@@ -89,7 +89,7 @@
 │  PENDING DECISIONS                                                      │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  [ ] ¿Agregar imágenes del modelo al output?                            │
+│  [X] ¿Agregar imágenes del modelo al output?                            │
 │  [ ] ¿Manejo de errores si Gemini falla?                                │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
