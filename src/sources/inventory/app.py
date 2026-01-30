@@ -26,7 +26,7 @@ class Inventory:
         elif self.country == "CL":
             data_base = pd.read_csv(CL_INVENTORY_PATH)
 
-        data_base_transformed = transform_database(data_base, self.country)
+        # data_base_transformed = transform_database(data_base, self.country)
 
-        return data_base_transformed
+        return data_base
 
