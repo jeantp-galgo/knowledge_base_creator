@@ -30,7 +30,7 @@ INSTRUCCIONES DE BÚSQUEDA:
 
 TIPOS DE MOTO RECONOCIDOS (uso interno para adaptar análisis): Urbana/Commuter/Trabajo | Naked/Streetfighter | Deportiva/Supersport | Touring/Sport-Touring | Adventure/Dual-Sport/Enduro | Cruiser/Custom | Scrambler/Retro/Clásica | Scooter/Automática | Trail/Off-road | Café Racer. IMPORTANTE: El tipo guía el análisis, pero la percepción real del usuario tiene prioridad.
 
-DÓNDE BUSCAR (fuentes públicas): YouTube (comentarios, owners reviews, test drives) | Reddit (subreddits de motos del pais/región) | X/Twitter (posts públicos) | Foros especializados de motociclismo | Blogs y reseñas de usuarios | Grupos públicos de Facebook (si accesibles) | Comparaciones orgánicas entre usuarios | Portales de venta de usados (valor de reventa y comentarios)
+DÓNDE BUSCAR (fuentes públicas): YouTube (comentarios, owners reviews, test drives) | Reddit (subreddits de motos del país/región) | X/Twitter (posts públicos) | Foros especializados de motociclismo | Blogs y reseñas de usuarios | Grupos públicos de Facebook (si accesibles) | Comparaciones orgánicas entre usuarios | Portales de venta de usados (valor de reventa y comentarios)
 
 QUÉ DEBES PRIORIZAR: Captura patrones consistentes sobre: Sensaciones reales de manejo | Dolores o quejas recurrentes | Motivaciones reales de compra | Comparaciones naturales con otras motos | Percepción del rendimiento real (según segmento) | Calidad percibida (ensamble, plásticos, acabados) | Experiencia de propiedad | Valor de reventa | Modificaciones populares. Evita repetir información típica de una ficha técnica oficial.
 
