@@ -107,4 +107,4 @@ IMPORTANTE:
 
 En 8-10 líneas, responde: * ¿Para quién es ideal esta moto en {país}? * ¿Para quién NO es recomendable? * ¿Qué la hace emocionalmente distinta? * ¿Qué concesión principal hace el comprador?
 
-RECORDATORIO FINAL: Este reporte debe servir para: (1) Ayudar a una persona real a decidir, (2) Alimentar una base de conocimiento para un chatbot, (3) Reflejar experiencia vivida, no marketing. Es mejor decir "NO tiene" o "no hay evidencia" que afirmar algo incorrecto.
+RECORDATORIO FINAL: Este reporte es una base de conocimiento estructurada de uso general. Debe servir para: (1) Ayudar a una persona real a tomar una decisión informada, (2) Ser consumido por cualquier sistema o proceso que requiera información de experiencia de usuario sobre motocicletas, (3) Reflejar experiencia vivida, no marketing. Es mejor decir "NO tiene" o "no hay evidencia" que afirmar algo incorrecto.
