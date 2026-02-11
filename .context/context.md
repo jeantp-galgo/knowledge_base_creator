@@ -1,6 +1,6 @@
 ## Contexto del Proyecto
 ### Qué se quiere hacer
-Automatizar la generación de bases de conocimiento sobre motocicletas usando IA. Estas bases de conocimiento se utilizarán para alimentar un chatbot en un marketplace de motos.
+Automatizar la generación de bases de conocimiento sobre motocicletas usando IA. Estas bases de conocimiento son un activo de datos independiente, diseñado para ser consumido por cualquier sistema o proceso que lo requiera (chatbots, dashboards, generación de contenido, análisis comparativo, entre otros).
 
 ### Objetivo principal
 
@@ -20,7 +20,6 @@ Se genera un prompt personalizado con esos datos
 Se envía el prompt a Replicate API para ejecutar (modelo por definir)
 Se recibe un informe detallado con experiencias reales de usuarios
 Se guarda el informe como base de conocimiento
-El chatbot del marketplace consulta estos informes para responder preguntas de usuarios
 
 ### Qué tipo de información genera
 Los informes se enfocan en experiencias reales de usuarios, NO en especificaciones técnicas:
@@ -29,8 +28,16 @@ Problemas comunes que reportan los dueños
 Sensaciones de manejo
 Comparaciones con otras motos
 Consumo real de combustible
-Valor de reventa
 Modificaciones populares
+
+### Usos posibles de la base de conocimiento
+La base de conocimiento es agnóstica al consumidor final. Algunos usos previstos:
+
+Alimentar chatbots o asistentes conversacionales
+Generar contenido editorial (blogs, fichas de producto, comparativas)
+Dashboards de análisis de percepción por marca/modelo/país
+Soporte a decisiones de inventario o pricing basado en percepción de mercado
+Cualquier sistema que necesite entender cómo los usuarios viven una moto en un país específico
 
 ### Consideraciones importantes
 
