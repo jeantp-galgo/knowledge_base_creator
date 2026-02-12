@@ -90,6 +90,22 @@
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │  [X] ¿Agregar imágenes del modelo al output?                            │
+   [X] Agregar validador de texto del prompt final, asegurarnos que todas las variables fueron reemplazadas
 │  [ ] ¿Manejo de errores si Gemini falla?                                │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
+
+
+Problemas actuales:
+* Gemini en un solo prompt tiene que hacer todo.
+* La información que puede extraer puede ser errónea.
+
+
+
+
+
+
+
+
+
+
