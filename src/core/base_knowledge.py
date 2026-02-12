@@ -212,7 +212,7 @@ def get_basic_data_model(df: pd.DataFrame, country: str) -> dict:
         "code": df["code"].iloc[0],
         "brand": df["brand"].iloc[0],
         "model": df["model"].iloc[0],
-        "year": str("2025"), #str(df["year"].iloc[0]), # Se fija un año ya que parece alucinar con un año tan reciente (2026 - hoy 11 de febrero) y tan poca info del modelo en el año.
+        "year": str(2025 if int(df["year"].iloc[0]) >= 2026 else df["year"].iloc[0]),
         "country": {"CO": "Colombia", "MX": "Mexico", "CL": "Chile"}.get(country, country),
         "type": str(df["type"].iloc[0]),
         "publication_url": df["publication_url"].iloc[0],
