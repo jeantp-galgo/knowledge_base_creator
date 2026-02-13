@@ -1,0 +1,158 @@
+DOCUMENTO INTEGRADO: CÓMO FUNCIONA UN CHATBOT
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│                          ANATOMÍA DE UN CHATBOT                             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ENTRADA DEL USUARIO                                                        │
+│  "¿Cuánto cuesta la Hunk 125R?"                                             │
+│                         │                                                   │
+│                         ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  1. MEMORIA (Gestión de contexto)                                   │   │
+│  │                                                                     │   │
+│  │  ¿Qué es?                                                           │   │
+│  │  El historial de la conversación. El LLM no recuerda nada por sí    │   │
+│  │  solo; tú le envías todo el contexto previo en cada mensaje.        │   │
+│  │                                                                     │   │
+│  │  Decisiones clave:                                                  │   │
+│  │  • ¿Cuántos turnos guardas? (todos, últimos N, resumen)             │   │
+│  │  • ¿Persistes entre sesiones? (requiere base de datos)              │   │
+│  │  • ¿Qué haces cuando se llena el context window?                    │   │
+│  │                                                                     │   │
+│  │  Estrategias:                                                       │   │
+│  │  • Historial completo → simple, para conversaciones cortas          │   │
+│  │  • Ventana deslizante → últimos N mensajes, pierde contexto viejo   │   │
+│  │  • Resumen progresivo → comprime historial antiguo                  │   │
+│  │  • Memoria persistente → guarda datos clave en BD entre sesiones    │   │
+│  │                                                                     │   │
+│  │  En tu caso: Ventana deslizante de 10 turnos. El frontend acumula   │   │
+│  │  los mensajes y en cada request envía los últimos 10 al backend,    │   │
+│  │  que los reformatea para Gemini. No persiste entre sesiones.        │   │
+│  │                                                                     │   │
+│  │  Estado actual: [Historial: "Usuario saludó, preguntó por modelos   │   │
+│  │                  disponibles, ahora pregunta precio de Hunk"]       │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                         │                                                   │
+│                         ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  2. PERSONALIDAD (System Prompt)                                    │   │
+│  │                                                                     │   │
+│  │  ¿Qué es?                                                           │   │
+│  │  La instrucción inicial que define quién es el chatbot, cómo        │   │
+│  │  habla, qué puede hacer y qué límites tiene.                        │   │
+│  │                                                                     │   │
+│  │  Componentes:                                                       │   │
+│  │  • Identidad → "Eres el asesor de MotoShop Colombia"                │   │
+│  │  • Contexto → "Vendes motos Hero en Colombia, precios en COP"       │   │
+│  │  • Objetivo → "Ayudar a elegir moto y agendar visita"               │   │
+│  │  • Tono → "Informal, tuteas, amigable pero profesional"             │   │
+│  │  • Reglas → "NUNCA inventes precios, SOLO info de tu base"          │   │
+│  │  • Fallbacks → "Si no sabes, ofrece conectar con humano"            │   │
+│  │                                                                     │   │
+│  │  Errores comunes:                                                   │   │
+│  │  • Muy vago ("sé útil") → sin personalidad                          │   │
+│  │  • Sin límites → inventa datos, responde cualquier cosa             │   │
+│  │  • Contradictorio → "sé breve" + "explica en detalle"               │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                         │                                                   │
+│                         ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  3. CONOCIMIENTO (RAG - Retrieval Augmented Generation)             │   │
+│  │                                                                     │   │
+│  │  ¿Qué es?                                                           │   │
+│  │  Sistema para darle al LLM información que no tiene: tu catálogo,   │   │
+│  │  precios, políticas, FAQs. NO re-entrena el modelo, le pasa         │   │
+│  │  contexto relevante en cada consulta.                               │   │
+│  │                                                                     │   │
+│  │  Cómo funciona:                                                     │   │
+│  │                                                                     │   │
+│  │  PREPARACIÓN (una vez):                                             │   │
+│  │  Documento → Se divide en chunks → Cada chunk se convierte          │   │
+│  │              en vector (embedding) → Se guarda en base vectorial    │   │
+│  │                                                                     │   │
+│  │  CONSULTA (cada mensaje):                                           │   │
+│  │  Pregunta usuario → Se convierte en vector → Se busca chunk         │   │
+│  │                     más similar → Se incluye en el prompt           │   │
+│  │                                                                     │   │
+│  │  Por qué falla:                                                     │   │
+│  │  • Chunks mal divididos → información incompleta                    │   │
+│  │  • Múltiples versiones → datos contradictorios                      │   │
+│  │  • Búsqueda trae chunk incorrecto → respuesta equivocada            │   │
+│  │  • Pregunta fuera de la base → inventa o dice que no sabe           │   │
+│  │                                                                     │   │
+│  │  Formato óptimo del contenido:                                      │   │
+│  │  • Estructura clara (headers, secciones delimitadas)                │   │
+│  │  • Información completa en cada sección (no dividir datos)          │   │
+│  │  • Sin duplicados ni contradicciones                                │   │
+│  │  • Texto limpio (evitar PDFs escaneados, tablas complejas)          │   │
+│  │                                                                     │   │
+│  │  En tu caso: Gemini File Search hace esto automáticamente.          │   │
+│  │  Tú subes archivo, Gemini chunquea, indexa y busca.                 │   │
+│  │                                                                     │   │
+│  │  Contexto recuperado: ["Hero Hunk 125R - $8.500.000 COP,            │   │
+│  │                        Motor 125cc, Colores: Rojo, Negro"]          │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                         │                                                   │
+│                         ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  4. MODELO (LLM)                                                    │   │
+│  │                                                                     │   │
+│  │  ¿Qué es?                                                           │   │
+│  │  El cerebro. Recibe todo lo anterior (memoria + personalidad +      │   │
+│  │  conocimiento + mensaje) y genera la respuesta.                     │   │
+│  │                                                                     │   │
+│  │  Input que recibe:                                                  │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐   │   │
+│  │  │ [System prompt: personalidad y reglas]                      │   │   │
+│  │  │ [Historial: mensajes anteriores]                            │   │   │
+│  │  │ [Contexto RAG: info relevante de tu base]                   │   │   │
+│  │  │ [Mensaje actual: "¿Cuánto cuesta la Hunk 125R?"]            │   │   │
+│  │  └─────────────────────────────────────────────────────────────┘   │   │
+│  │                                                                     │   │
+│  │  Opciones: Gemini, GPT-4, Claude, Llama, etc.                       │   │
+│  │  En tu caso: Gemini (via Gemini API + File Search)                  │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                         │                                                  │
+│                         ▼                                                  │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  5. OBSERVABILIDAD (Métricas y Logs)                                │   │
+│  │                                                                     │   │
+│  │  ¿Qué es?                                                           │   │
+│  │  El sistema que registra cada interacción para análisis posterior   │   │
+│  │  y detección de problemas. Sin esto, operas a ciegas.               │   │
+│  │                                                                     │   │
+│  │  Qué se captura:                                                    │   │
+│  │  • session_id → Agrupa conversaciones del mismo usuario             │   │
+│  │  • conversation_turn → Profundidad del engagement                   │   │
+│  │  • response_time_ms → Performance del modelo                        │   │
+│  │  • finish_reason → ¿Respuesta completa (STOP) o truncada (MAX)?     │   │
+│  │  • grounding_chunks_count → ¿Cuánto RAG se usó?                     │   │
+│  │  • error_type/error_message → Detección de fallos                   │   │
+│  │                                                                     │   │
+│  │  Por qué importa:                                                   │   │
+│  │  • Detectar respuestas truncadas (MAX_TOKENS)                       │   │
+│  │  • Medir tiempos de respuesta degradados                            │   │
+│  │  • Identificar preguntas que el RAG no resuelve                     │   │
+│  │  • Entender qué temas consultan los usuarios                        │   │
+│  │                                                                     │   │
+│  │  En tu caso: Tabla chat_interactions en Supabase                    │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │                                        │
+│                                                                             │
+│  RESPUESTA DEL CHATBOT                                                      │
+│  "La Hero Hunk 125R está en $8.500.000 COP. La tenemos                      │
+│   disponible en rojo y negro. ¿Te cuento sobre financiación?"               │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
