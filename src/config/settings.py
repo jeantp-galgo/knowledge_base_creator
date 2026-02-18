@@ -26,3 +26,11 @@ MONGO_SETTINGS = {
 CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCO.csv"
 MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseMX.csv"
 CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCL.csv"
+
+# Prompts
+SCRAPER_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/scraper_agent_template.md"
+VALIDATOR_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/validator_agent_template.md"
+VALIDATOR_RE_RESEARCH_TEMPLATE_PATH = "../src/data/input/prompts/validator_re_research_template.md"
+KNOWLEDGE_BASE_TEMPLATE_PATH = "../src/data/input/prompts/knowledge_base_template.md"
+QA_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/qa_agent_template.md"
+COMPARISONS_TEMPLATE_PATH = "../src/data/input/prompts/comparisons_template.md"
