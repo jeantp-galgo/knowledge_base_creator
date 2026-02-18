@@ -635,7 +635,6 @@ Según `STATUS.txt`:
 
 ## Referencias Adicionales
 
-- **Documentación de skills**: `.context/skills/`
 - **Decisiones arquitectónicas**: `DECISIONS.md`
 - **Estado del proyecto**: `STATUS.txt`
 - **Integración chatbot**: `.context/chatbot/como_funciona_chatbot.txt`
