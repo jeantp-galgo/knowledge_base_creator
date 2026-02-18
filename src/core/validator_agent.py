@@ -78,7 +78,6 @@ class ValidatorAgent:
     def re_research(
         self,
         experiencia: Dict[str, Any],
-        ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]],
         flag: str
     ) -> Dict[str, Any]:
         """
@@ -86,7 +85,6 @@ class ValidatorAgent:
 
         Args:
             experiencia: Experiencia que requiere verificación
-            ficha_tecnica: Puede ser dict, string o lista (ver validate() para detalles)
             flag: Tipo de flag detectado (ej: "CONTRADICCION_FRENOS")
 
         Returns:
@@ -95,8 +93,8 @@ class ValidatorAgent:
         # Leer y preparar el prompt de re-research
         prompt = read_prompt_from_file(self.re_research_template_path)
 
-        # Preparar ficha técnica
-        ficha_str = self._format_ficha_tecnica(ficha_tecnica, self.brand, self.model, self.year, self.country)
+        # Preparar ficha técnica (usa la de la instancia)
+        ficha_str = self._format_ficha_tecnica(self.ficha_tecnica, self.brand, self.model, self.year, self.country)
 
         # Preparar experiencia como JSON string
         experiencia_str = json.dumps(experiencia, ensure_ascii=False, indent=2)
