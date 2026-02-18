@@ -17,7 +17,7 @@ class WriterAgent:
     - Usar lenguaje apropiado según cantidad de evidencia
     """
 
-    def __init__(self, brand: str, model: str, year: int, country: str, tipo: str, ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]], processor: GeminiProcessor = None):
+    def __init__(self, brand: str, model: str, year: int, tipo: str, ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]], experiencias_validadas: List[Dict[str, Any]], experiencias_verificadas: List[Dict[str, Any]], country: str, processor: GeminiProcessor = None):
         """
         Inicializa el WriterAgent.
 
@@ -28,6 +28,8 @@ class WriterAgent:
             country: País específico
             tipo: Tipo de moto (ej: "Urbana")
             ficha_tecnica: Ficha técnica (puede ser dict, string o lista)
+            experiencias_validadas: Lista de experiencias validadas directamente (Nivel 1)
+            experiencias_verificadas: Lista de experiencias verificadas con re-research (Nivel 2)
             processor: Instancia de GeminiProcessor. Si es None, se crea una nueva.
         """
         self.processor = processor or GeminiProcessor()
@@ -38,11 +40,23 @@ class WriterAgent:
         self.ficha_tecnica = ficha_tecnica
         self.country = country
         self.tipo = tipo
+        self.experiencias_validadas = experiencias_validadas
+        self.experiencias_verificadas = experiencias_verificadas
         # Ruta del prompt
         self.prompt_template_path = KNOWLEDGE_BASE_TEMPLATE_PATH
 
     def get_prompt_template(self) -> str:
+        """
+        Construye el prompt completo con todas las secciones necesarias.
+        Usa las experiencias almacenadas en los atributos de instancia.
+
+        Returns:
+            String con el prompt completo listo para enviar
+        """
+        # Preparar ficha técnica
         ficha_str = self._format_ficha_tecnica(self.ficha_tecnica, self.brand, self.model, self.year, self.country)
+
+        # Reemplazar variables básicas del template
         prompt = replace_variables(read_prompt_from_file(self.prompt_template_path), {
             "{MARCA}": self.brand,
             "{MODELO}": self.model,
@@ -51,34 +65,9 @@ class WriterAgent:
             "{TIPO}": self.tipo,
             "{FICHA TECNICA}": ficha_str
         })
-        info = validate_prompt_variables(prompt)
-        if not info["valid"]:
-            raise ValueError(f"Prompt variables are missing: {info['missing_variables']}")
-        if info["locations"]:
-            for variable, locations in info["locations"].items():
-                print(f"Variable {variable} is missing in the following lines: {locations}")
-        return prompt
-
-    def write(
-        self,
-        experiencias_validadas: List[Dict[str, Any]],
-        experiencias_verificadas: List[Dict[str, Any]],
-    ) -> str:
-        """
-        Genera el Knowledge Base usando experiencias validadas y ficha técnica.
-
-        Args:
-            experiencias_validadas: Lista de experiencias validadas directamente (Nivel 1)
-            experiencias_verificadas: Lista de experiencias verificadas con re-research (Nivel 2)
-
-        Returns:
-            String con el Knowledge Base generado en formato del template
-        """
-        # Leer y preparar el prompt
-        prompt = self.get_prompt_template()
 
         # Combinar todas las experiencias
-        todas_experiencias = experiencias_validadas + experiencias_verificadas
+        todas_experiencias = self.experiencias_validadas + self.experiencias_verificadas
 
         # Preparar experiencias como JSON string
         experiencias_str = json.dumps(todas_experiencias, ensure_ascii=False, indent=2)
@@ -140,6 +129,27 @@ class WriterAgent:
    - PROHIBIDO: Escribir que tiene ABS cuando la ficha dice CBS
 """
 
+        # Validar que no queden variables sin reemplazar
+        info = validate_prompt_variables(prompt)
+        if not info["valid"]:
+            raise ValueError(f"Prompt variables are missing: {info['missing_variables']}")
+        if info["locations"]:
+            for variable, locations in info["locations"].items():
+                print(f"Variable {variable} is missing in the following lines: {locations}")
+
+        return prompt
+
+    def write(self) -> str:
+        """
+        Genera el Knowledge Base usando experiencias validadas y ficha técnica.
+        Usa las experiencias almacenadas en los atributos de instancia.
+
+        Returns:
+            String con el Knowledge Base generado en formato del template
+        """
+        # Construir el prompt completo (incluye validación de variables)
+        prompt = self.get_prompt_template()
+
         # Ejecutar generación con Gemini
         response = self.processor.send_prompt(prompt)
 
@@ -199,6 +209,8 @@ class WriterAgent:
         # Contar por categoría de extractos
         categorias = {}
         modificaciones = []
+        relaciones_causa_efecto = []
+        comparaciones = []
 
         for exp in experiencias:
             extractos = exp.get("extractos_relevantes", []) or exp.get("extractos", [])
@@ -208,6 +220,15 @@ class WriterAgent:
 
                 if categoria == "modificaciones":
                     modificaciones.append(extracto.get("texto", ""))
+
+            # Contar relaciones causa-efecto y comparaciones (ya están en el JSON de experiencias)
+            relaciones = exp.get("relaciones_causa_efecto", [])
+            if relaciones:
+                relaciones_causa_efecto.extend(relaciones)
+
+            comps = exp.get("comparaciones", [])
+            if comps:
+                comparaciones.extend(comps)
 
         # Generar texto de estadísticas
         lines = []
@@ -222,6 +243,18 @@ class WriterAgent:
         if len(modificaciones) > 0:
             for i, mod in enumerate(modificaciones[:3], 1):
                 lines.append(f"  {i}. {mod[:100]}...")
+
+        lines.append("")
+        lines.append(f"Relaciones causa-efecto identificadas: {len(relaciones_causa_efecto)}")
+
+        lines.append("")
+        lines.append(f"Comparaciones con otros modelos identificadas: {len(comparaciones)}")
+        if len(comparaciones) > 0:
+            modelos_comparados = set()
+            for comp in comparaciones:
+                modelo = comp.get("modelo_comparado", "Desconocido")
+                modelos_comparados.add(modelo)
+            lines.append(f"  Modelos comparados: {', '.join(sorted(modelos_comparados))}")
 
         return "\n".join(lines)
 
