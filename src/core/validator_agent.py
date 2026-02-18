@@ -1,9 +1,9 @@
 from typing import Dict, Any, List, Optional, Union
 from .gemini_processor import GeminiProcessor
-from .prompt_utils import read_prompt_from_file, replace_variables
+from .prompt_utils import read_prompt_from_file, replace_variables, validate_prompt_variables
 from .base_knowledge import format_technical_specs
+from src.config.settings import VALIDATOR_AGENT_TEMPLATE_PATH, VALIDATOR_RE_RESEARCH_TEMPLATE_PATH
 import json
-import ast
 
 
 class ValidatorAgent:
@@ -17,61 +17,57 @@ class ValidatorAgent:
     - Clasificar experiencias en validadas, verificadas, excluidas
     """
 
-    def __init__(self, processor: GeminiProcessor = None):
+    def __init__(self, brand: str, model: str, year: int, experiencias: List[Dict[str, Any]], ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]], country: str):
         """
         Inicializa el ValidatorAgent.
 
         Args:
-            processor: Instancia de GeminiProcessor. Si es None, se crea una nueva.
+            brand: Marca de la motocicleta
+            model: Modelo de la motocicleta
+            year: Año del modelo
+            experiencias: Lista de experiencias del ScraperAgent
+            ficha_tecnica: Ficha técnica (puede ser dict, string o lista)
+            country: País específico
         """
-        self.processor = processor or GeminiProcessor()
-        self.prompt_template_path = "../src/data/input/prompts/validator_agent_template.md"
-        self.re_research_template_path = "../src/data/input/prompts/validator_re_research_template.md"
+        self.processor = GeminiProcessor()
+        # Datos del modelo
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.country = country
+        self.experiencias = experiencias
+        self.ficha_tecnica = ficha_tecnica
+        # Rutas de los prompts
+        self.prompt_template_path = VALIDATOR_AGENT_TEMPLATE_PATH
+        self.re_research_template_path = VALIDATOR_RE_RESEARCH_TEMPLATE_PATH
 
-    def validate(
-        self,
-        experiencias: List[Dict[str, Any]],
-        ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]],
-        marca: str,
-        modelo: str,
-        año: int,
-        pais: str
-    ) -> Dict[str, Any]:
+    def get_prompt_template(self) -> str:
+        prompt = replace_variables(read_prompt_from_file(self.prompt_template_path), {
+            "{MARCA}": self.brand,
+            "{MODELO}": self.model,
+            "{AÑO}": str(self.year),
+            "{FICHA_TECNICA}": self._format_ficha_tecnica(self.ficha_tecnica, self.brand, self.model, self.year, self.country),
+            "{PAIS}": self.country,
+            "{EXPERIENCIAS}": json.dumps(self.experiencias, ensure_ascii=False, indent=2)
+        })
+        return prompt
+
+    def validate(self) -> Dict[str, Any]:
         """
         Valida experiencias contra la ficha técnica (Nivel 1: Validación automática).
 
         Args:
-            experiencias: Lista de experiencias del ScraperAgent
             ficha_tecnica: Puede ser:
                 - Dict con ficha técnica (formato de get_basic_data_model con 'technical_specs' formateado)
                 - Dict con 'technical_specs' como string o lista raw
                 - String con lista de specs (formato raw)
                 - Lista de dicts con specs
-            marca: Marca de la motocicleta
-            modelo: Modelo de la motocicleta
-            año: Año del modelo
-            pais: País específico
 
         Returns:
             Dict con estructura de validación inicial y casos que requieren re-research
         """
         # Leer y preparar el prompt
-        prompt = read_prompt_from_file(self.prompt_template_path)
-
-        # Preparar ficha técnica para el prompt
-        ficha_str = self._format_ficha_tecnica(ficha_tecnica, marca, modelo, año, pais)
-
-        # Preparar experiencias como JSON string
-        experiencias_str = json.dumps(experiencias, ensure_ascii=False, indent=2)
-
-        prompt = replace_variables(prompt, {
-            "{MARCA}": marca,
-            "{MODELO}": modelo,
-            "{AÑO}": str(año),
-            "{PAIS}": pais,
-            "{FICHA_TECNICA}": ficha_str,
-            "{EXPERIENCIAS}": experiencias_str
-        })
+        prompt = self.get_prompt_template()
 
         # Ejecutar validación con Gemini
         response = self.processor.send_prompt(prompt)
@@ -83,10 +79,6 @@ class ValidatorAgent:
         self,
         experiencia: Dict[str, Any],
         ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]],
-        marca: str,
-        modelo: str,
-        año: int,
-        pais: str,
         flag: str
     ) -> Dict[str, Any]:
         """
@@ -95,10 +87,6 @@ class ValidatorAgent:
         Args:
             experiencia: Experiencia que requiere verificación
             ficha_tecnica: Puede ser dict, string o lista (ver validate() para detalles)
-            marca: Marca de la motocicleta
-            modelo: Modelo de la motocicleta
-            año: Año del modelo
-            pais: País específico
             flag: Tipo de flag detectado (ej: "CONTRADICCION_FRENOS")
 
         Returns:
@@ -108,16 +96,16 @@ class ValidatorAgent:
         prompt = read_prompt_from_file(self.re_research_template_path)
 
         # Preparar ficha técnica
-        ficha_str = self._format_ficha_tecnica(ficha_tecnica, marca, modelo, año, pais)
+        ficha_str = self._format_ficha_tecnica(ficha_tecnica, self.brand, self.model, self.year, self.country)
 
         # Preparar experiencia como JSON string
         experiencia_str = json.dumps(experiencia, ensure_ascii=False, indent=2)
 
         prompt = replace_variables(prompt, {
-            "{MARCA}": marca,
-            "{MODELO}": modelo,
-            "{AÑO}": str(año),
-            "{PAIS}": pais,
+            "{MARCA}": self.brand,
+            "{MODELO}": self.model,
+            "{AÑO}": str(self.year),
+            "{PAIS}": self.country,
             "{FICHA_TECNICA}": ficha_str,
             "{EXPERIENCIA}": experiencia_str,
             "{FLAG}": flag

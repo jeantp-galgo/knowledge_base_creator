@@ -1,7 +1,8 @@
 from typing import Dict, Any, List, Union
 from .gemini_processor import GeminiProcessor
-from .prompt_utils import read_prompt_from_file, replace_variables
+from .prompt_utils import read_prompt_from_file, replace_variables, validate_prompt_variables
 from .base_knowledge import format_technical_specs
+from src.config.settings import KNOWLEDGE_BASE_TEMPLATE_PATH
 import json
 
 
@@ -16,26 +17,52 @@ class WriterAgent:
     - Usar lenguaje apropiado según cantidad de evidencia
     """
 
-    def __init__(self, processor: GeminiProcessor = None):
+    def __init__(self, brand: str, model: str, year: int, country: str, tipo: str, ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]], processor: GeminiProcessor = None):
         """
         Inicializa el WriterAgent.
 
         Args:
+            brand: Marca de la motocicleta
+            model: Modelo de la motocicleta
+            year: Año del modelo
+            country: País específico
+            tipo: Tipo de moto (ej: "Urbana")
+            ficha_tecnica: Ficha técnica (puede ser dict, string o lista)
             processor: Instancia de GeminiProcessor. Si es None, se crea una nueva.
         """
         self.processor = processor or GeminiProcessor()
-        self.prompt_template_path = "../src/data/input/prompts/knowledge_base_template.md"
+        # Datos del modelo
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.ficha_tecnica = ficha_tecnica
+        self.country = country
+        self.tipo = tipo
+        # Ruta del prompt
+        self.prompt_template_path = KNOWLEDGE_BASE_TEMPLATE_PATH
+
+    def get_prompt_template(self) -> str:
+        ficha_str = self._format_ficha_tecnica(self.ficha_tecnica, self.brand, self.model, self.year, self.country)
+        prompt = replace_variables(read_prompt_from_file(self.prompt_template_path), {
+            "{MARCA}": self.brand,
+            "{MODELO}": self.model,
+            "{AÑO}": str(self.year),
+            "{PAIS}": self.country,
+            "{TIPO}": self.tipo,
+            "{FICHA TECNICA}": ficha_str
+        })
+        info = validate_prompt_variables(prompt)
+        if not info["valid"]:
+            raise ValueError(f"Prompt variables are missing: {info['missing_variables']}")
+        if info["locations"]:
+            for variable, locations in info["locations"].items():
+                print(f"Variable {variable} is missing in the following lines: {locations}")
+        return prompt
 
     def write(
         self,
         experiencias_validadas: List[Dict[str, Any]],
         experiencias_verificadas: List[Dict[str, Any]],
-        ficha_tecnica: Union[Dict[str, Any], str, List[Dict[str, Any]]],
-        marca: str,
-        modelo: str,
-        año: int,
-        pais: str,
-        tipo: str = ""
     ) -> str:
         """
         Genera el Knowledge Base usando experiencias validadas y ficha técnica.
@@ -43,21 +70,12 @@ class WriterAgent:
         Args:
             experiencias_validadas: Lista de experiencias validadas directamente (Nivel 1)
             experiencias_verificadas: Lista de experiencias verificadas con re-research (Nivel 2)
-            ficha_tecnica: Ficha técnica (puede ser dict, string o lista)
-            marca: Marca de la motocicleta
-            modelo: Modelo de la motocicleta
-            año: Año del modelo
-            pais: País específico
-            tipo: Tipo de moto (ej: "Urbana")
 
         Returns:
             String con el Knowledge Base generado en formato del template
         """
         # Leer y preparar el prompt
-        prompt = read_prompt_from_file(self.prompt_template_path)
-
-        # Preparar ficha técnica
-        ficha_str = self._format_ficha_tecnica(ficha_tecnica, marca, modelo, año, pais)
+        prompt = self.get_prompt_template()
 
         # Combinar todas las experiencias
         todas_experiencias = experiencias_validadas + experiencias_verificadas
@@ -70,15 +88,6 @@ class WriterAgent:
 
         # Agregar instrucciones sobre generalizaciones
         instrucciones_generalizaciones = self._generar_instrucciones_generalizaciones(estadisticas)
-
-        prompt = replace_variables(prompt, {
-            "{marca}": marca,
-            "{modelo}": modelo,
-            "{año}": str(año),
-            "{pais}": pais,
-            "{tipo}": tipo,
-            "{ficha_tecnica}": ficha_str
-        })
 
         # Agregar sección de experiencias y restricciones al final del prompt
         prompt += f"""
@@ -190,7 +199,6 @@ class WriterAgent:
         # Contar por categoría de extractos
         categorias = {}
         modificaciones = []
-        comparaciones = []
 
         for exp in experiencias:
             extractos = exp.get("extractos_relevantes", []) or exp.get("extractos", [])

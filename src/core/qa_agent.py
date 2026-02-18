@@ -2,6 +2,7 @@ from typing import Dict, Any, List, Union
 from .gemini_processor import GeminiProcessor
 from .prompt_utils import read_prompt_from_file, replace_variables
 from .base_knowledge import format_technical_specs
+from src.config.settings import QA_AGENT_TEMPLATE_PATH
 import json
 
 
@@ -25,7 +26,7 @@ class QAAgent:
             processor: Instancia de GeminiProcessor. Si es None, se crea una nueva.
         """
         self.processor = processor or GeminiProcessor()
-        self.prompt_template_path = "src/data/input/prompts/qa_agent_template.md"
+        self.prompt_template_path = QA_AGENT_TEMPLATE_PATH
 
     def validate(
         self,

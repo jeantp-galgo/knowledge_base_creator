@@ -1,8 +1,8 @@
 from typing import Dict, Any
 from .gemini_processor import GeminiProcessor
-from .prompt_utils import read_prompt_from_file, replace_variables
+from .prompt_utils import read_prompt_from_file, replace_variables, validate_prompt_variables
+from src.config.settings import SCRAPER_AGENT_TEMPLATE_PATH
 import json
-import os
 
 
 class ScraperAgent:
@@ -15,18 +15,40 @@ class ScraperAgent:
     - Etiquetar fuentes con país identificado
     """
 
-    def __init__(self, processor: GeminiProcessor = None):
+    def __init__(self, brand: str, model: str, year: int, country: str):
         """
         Inicializa el ScraperAgent.
 
         Args:
-            processor: Instancia de GeminiProcessor. Si es None, se crea una nueva.
+            brand: Marca de la motocicleta
+            model: Modelo de la motocicleta
+            year: Año del modelo
+            country: País específico (Colombia, México, Chile)
         """
-        self.processor = processor or GeminiProcessor()
+        self.processor = GeminiProcessor()
+        self.brand = brand
+        self.model = model
+        self.year = year
+        self.country = country
         # Ruta relativa desde la raíz del proyecto
-        self.prompt_template_path = "../src/data/input/prompts/scraper_agent_template.md"
+        self.prompt_template_path = SCRAPER_AGENT_TEMPLATE_PATH
 
-    def scrape(self, marca: str, modelo: str, año: int, pais: str) -> Dict[str, Any]:
+    def get_prompt_template(self) -> str:
+        prompt = replace_variables(read_prompt_from_file(self.prompt_template_path), {
+            "{MARCA}": self.brand,
+            "{MODELO}": self.model,
+            "{AÑO}": str(self.year),
+            "{PAIS}": self.country
+        })
+        info = validate_prompt_variables(prompt)
+        if not info["valid"]:
+            raise ValueError(f"Prompt variables are missing: {info['missing_variables']}")
+        if info["locations"]:
+            for variable, locations in info["locations"].items():
+                print(f"Variable {variable} is missing in the following lines: {locations}")
+        return prompt
+
+    def scrape(self) -> Dict[str, Any]:
         """
         Ejecuta el proceso de scraping para obtener experiencias de usuarios.
 
@@ -43,23 +65,13 @@ class ScraperAgent:
                     {
                         "fuente": "...",
                         "pais_identificado": "...",
-                        "tipo_contenido": "...",
-                        "fecha_aprox": "...",
-                        "extractos_relevantes": [...],
-                        "menciones_specs_tecnicas": [...],
-                        "observacion": "..." (opcional)
+                        .....
                     }
                 ]
             }
         """
         # Leer y preparar el prompt
-        prompt = read_prompt_from_file(self.prompt_template_path)
-        prompt = replace_variables(prompt, {
-            "{MARCA}": marca,
-            "{MODELO}": modelo,
-            "{AÑO}": str(año),
-            "{PAIS}": pais
-        })
+        prompt = self.get_prompt_template()
 
         # Ejecutar búsqueda con Gemini
         response = self.processor.send_prompt(prompt)
