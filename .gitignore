@@ -103,7 +103,4 @@ docs/_build/
 Thumbs.db
 ehthumbs.db
 
-.cursor
 trash/
-
-src/data/output/gemini/
