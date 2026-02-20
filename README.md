@@ -26,10 +26,16 @@ knowledge-base-generator/
 │   └── base_inventory/
 │       └── BaseCO.csv            # Base de datos con fichas técnicas
 │
-├── outputs/                       # Knowledge Bases generados (organizados por marca)
-│   ├── Bajaj/
-│   ├── TVS/
-│   ├── Hero/
+├── outputs/                       # Knowledge Bases generados (organizados por país)
+│   ├── Colombia/
+│   │   ├── KB/                    # Knowledge Bases por marca
+│   │   │   ├── Bajaj/
+│   │   │   ├── TVS/
+│   │   │   └── ...
+│   │   └── estadisticas/           # Metadatos por marca
+│   │       ├── Bajaj/
+│   │       ├── TVS/
+│   │       └── ...
 │   └── ...
 │
 ├── docs/
@@ -151,7 +157,7 @@ Orchestrator (inicia el proceso)
 
 3. **Variables de Entorno**: Asegúrate de tener `GEMINI_API_KEY` en tu archivo `.env`.
 
-4. **Outputs**: Los Knowledge Bases generados se guardan en `outputs/{marca}/` organizados por marca, con formato: `{marca}_{modelo}_{año}_{pais}_KB.txt` y `{marca}_{modelo}_{año}_{pais}_META.json`
+4. **Outputs**: Los Knowledge Bases generados se guardan en `outputs/{pais}/KB/{marca}/` organizados por país y marca, con formato: `{marca}_{modelo}_{año}_{pais}_KB.txt`. Los metadatos se guardan en `outputs/{pais}/estadisticas/{marca}/` con formato: `{marca}_{modelo}_{año}_{pais}_META.json`
 
 ## Troubleshooting
 
