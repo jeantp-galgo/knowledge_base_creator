@@ -75,6 +75,8 @@ Para cada experiencia en `experiencias.experiencias_usuarios`, verifica:
 - No hay contradicciones evidentes
 - Confidence: 95%
 
+**Caso especial — Sin menciones de specs técnicas**: Si `menciones_specs_tecnicas` está vacío o es una lista vacía, no hay nada que validar contra la ficha técnica. Incluir directamente en `experiencias_validadas` con `confidence: 95` sin aplicar ninguna regla de validación técnica.
+
 **Estructura para experiencias validadas**:
 - Mantener la estructura original completa de la experiencia del Scraper
 - Agregar campos: `pais_confirmado: true`, `version_correcta: true`, `confidence: 95`
