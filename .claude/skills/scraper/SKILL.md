@@ -48,15 +48,17 @@ El prompt debe cerrar con una instrucción explícita:
 El script recibe el prompt construido, lo ejecuta en Gemini con `google_search` y maneja la validación del JSON y los reintentos automáticamente.
 
 **Cómo ejecutarlo**:
-1. Escribe el prompt en un archivo JSON temporal:
+1. Escribe el prompt en un archivo JSON temporal en el directorio raíz del proyecto:
 ```json
 { "prompt": "<el prompt completo que construiste>" }
 ```
-2. Ejecuta el script directamente:
+2. Ejecuta el script desde el directorio raíz del proyecto:
 ```bash
 python .claude/skills/scraper/scripts/scraper_fetch.py input_scraper.json output_scraper.json
 ```
 3. Lee el resultado desde `output_scraper.json`.
+
+> **Nota**: Los archivos `input_scraper.json` y `output_scraper.json` son temporales. Deben crearse y leerse desde el directorio raíz del proyecto para que el script los encuentre correctamente.
 
 El script reintenta hasta 3 veces si el JSON es inválido. Si falla en todos los intentos, retorna:
 ```json
