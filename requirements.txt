@@ -1,0 +1,13 @@
+# Dependencias para Knowledge Base Generator
+
+# Google Gemini API
+google-genai>=0.2.0
+
+# Manejo de variables de entorno
+python-dotenv>=1.0.0
+
+# Procesamiento de datos (para leer CSV)
+pandas>=2.0.0
+
+# Procesamiento de JSON (incluido en Python, pero por si acaso)
+# json está en la librería estándar de Python
