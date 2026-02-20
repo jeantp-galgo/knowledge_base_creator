@@ -170,20 +170,21 @@ El `score_calidad` debe ser un número entre 0 y 100, calculado así:
 
 ## Criterios de Aprobación
 
-El KB se aprueba si:
-- ✅ NO hay contradicciones con la ficha técnica (problemas críticos de tipo `CONTRADICCION_FICHA`)
-- ✅ NO hay información inventada (problemas críticos de tipo `INFORMACION_INVENTADA`)
+`validacion_aprobada: true` SOLO cuando se cumplen TODAS las condiciones simultáneamente:
+- ✅ NO hay contradicciones con la ficha técnica (tipo `CONTRADICCION_FICHA`)
+- ✅ NO hay información inventada (tipo `INFORMACION_INVENTADA`)
 - ✅ Las generalizaciones son apropiadas según la evidencia (o solo advertencias menores)
 - ✅ El formato es correcto (todas las secciones presentes)
-- ✅ Las secciones requeridas están presentes
 - ✅ Score de calidad >= 60
 
-El KB NO se aprueba si:
+`validacion_aprobada: false` si se cumple CUALQUIERA de estas condiciones:
 - ❌ Hay contradicciones críticas con la ficha técnica
 - ❌ Hay información claramente inventada
 - ❌ Generaliza inapropiadamente de manera grave (ej: "Los usuarios modifican..." con 1 ejemplo)
 - ❌ Faltan secciones críticas
 - ❌ Score de calidad < 60
+
+**Nota**: Un KB puede tener `validacion_aprobada: false` y aun así no tener `CONTRADICCION_FICHA` ni `INFORMACION_INVENTADA` — por ejemplo, si acumula varios problemas de severidad media que bajan el score por debajo de 60. En ese caso, el rechazo se basa en el score, no en los tipos críticos.
 
 ---
 
@@ -207,6 +208,9 @@ Retorna ÚNICAMENTE un JSON válido con esta estructura:
   "advertencias": [
     {
       "tipo": "GENERALIZACION_LIMITE" | "INFORMACION_LIMITADA" | "OTRO",
+      // GENERALIZACION_LIMITE: lenguaje casi correcto pero en el límite (ej: 3 ejemplos y usa "Es común")
+      // INFORMACION_LIMITADA: sección con muy pocos datos, podría haberse expandido más
+      // OTRO: cualquier observación que no encaje en los tipos anteriores (ej: tono inapropiado, redacción confusa)
       "seccion": "[SECCION]",
       "descripcion": "Advertencia sobre algo que podría mejorarse. Ejemplo: En [MODIFICACIONES] se usa 'Algunos usuarios modifican...' pero solo hay 2 ejemplos. Considerar usar 'Algunos usuarios han modificado...'",
       "sugerencia": "Sugerencia de mejora"
