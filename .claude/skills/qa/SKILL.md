@@ -1,6 +1,6 @@
 ---
 name: qa
-description: Este skill debe usarse cuando se valida la calidad de un Knowledge Base generado sobre motocicletas. Verifica contradicciones con la ficha técnica, generalizaciones inapropiadas, errores de formato e información inventada, retornando un JSON estructurado con un puntaje de calidad.
+description: Valida la calidad de Knowledge Base generado sobre motocicletas. Verifica consistencia con fichas técnicas oficiales, generalizaciones apropiadas según nivel de evidencia, formato correcto de secciones, ausencia de información inventada y coherencia interna. Retorna JSON estructurado con puntaje de calidad (0-100), problemas críticos, advertencias y recomendaciones. Relevante para asegurar calidad y precisión de informes experienciales antes de finalización.
 ---
 
 # Skill: QA - Validación de Knowledge Base

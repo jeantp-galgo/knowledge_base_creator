@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Orquesta los skills Scraper, Validator, Writer y QA en secuencia, manejando reintentos y manejo de errores. Debe usarse cuando se coordina el pipeline completo de generación de Knowledge Base para motocicletas.
+description: Coordina el pipeline completo de generación de Knowledge Base para motocicletas, orquestando los skills Scraper, Validator, Writer y QA en secuencia. Maneja reintentos, validaciones y decisiones de finalización del proceso. Relevante para workflows de investigación y generación de informes experienciales sobre motocicletas.
 ---
 
 # Orchestrator

@@ -1,6 +1,6 @@
 ---
 name: writer
-description: Este skill debe usarse cuando se genera un Knowledge Base experiencial estructurado a partir de experiencias validadas de usuarios de motocicletas. Sintetiza sentimientos, sensaciones, problemas, comparaciones y perfiles de usuarios en un reporte de texto plano con una estructura de secciones definida.
+description: Genera Knowledge Base experiencial estructurado sobre motocicletas a partir de experiencias validadas de usuarios. Sintetiza sentimientos, sensaciones de manejo, problemas recurrentes, comparaciones, perfiles de usuarios y relaciones causa-efecto en un reporte de texto plano con secciones definidas. Enfoque vivencial y sentimental, evitando descripciones técnicas. Relevante para crear informes de investigación de sentimientos y experiencias de usuarios.
 ---
 
 # Skill: Writer - Generación de Knowledge Base

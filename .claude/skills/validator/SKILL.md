@@ -1,6 +1,6 @@
 ---
 name: validator
-description: Este skill debe usarse cuando se validan experiencias de usuarios recolectadas contra la ficha técnica oficial de la motocicleta. Marca contradicciones en frenos, sistema de combustible o cilindrada, y separa experiencias validadas de aquellas que requieren re-investigación o exclusión automática.
+description: Valida experiencias de usuarios recolectadas contra fichas técnicas oficiales de motocicletas. Detecta contradicciones en especificaciones críticas (frenos, sistema de combustible, cilindrada), separa experiencias validadas de aquellas que requieren re-investigación, y excluye automáticamente experiencias de países o versiones incorrectas. Retorna JSON con experiencias validadas, flags de contradicción y exclusiones. Relevante para asegurar que las experiencias correspondan al modelo y país especificados.
 ---
 
 # Skill: Validator - Validación de Experiencias (Nivel 1)

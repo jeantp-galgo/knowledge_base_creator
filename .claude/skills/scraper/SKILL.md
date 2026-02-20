@@ -1,6 +1,6 @@
 ---
 name: scraper
-description: Este skill debe usarse cuando se recolectan experiencias reales de usuarios sobre un modelo específico de motocicleta. Construye un prompt para Gemini con Google Search para recopilar reseñas vivenciales, publicaciones en foros y opiniones de usuarios, retornando un JSON estructurado.
+description: Recolecta experiencias reales de usuarios sobre motocicletas mediante búsquedas web estructuradas. Construye prompts para Gemini con Google Search para recopilar reseñas vivenciales, publicaciones en foros, videos de YouTube y opiniones de usuarios. Retorna JSON estructurado con experiencias categorizadas, menciones técnicas, relaciones causa-efecto y comparaciones. Relevante para investigación de sentimientos y experiencias de usuarios sobre modelos específicos.
 ---
 
 # Skill: Scraper - Recolección de Experiencias de Usuarios
