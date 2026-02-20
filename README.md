@@ -151,7 +151,7 @@ Orchestrator (inicia el proceso)
 
 ## Notas Importantes
 
-1. **Ficha Técnica**: El Orchestrator busca automáticamente en `inputs/base_inventory/BaseCO.csv` usando marca, modelo y año.
+1. **Ficha Técnica**: El Orchestrator busca automáticamente en `inputs/base_inventory/BaseCO.csv` usando marca, modelo y año. El archivo se puede conseguir ejecutando el proyecto de historical_data
 
 2. **Scraper Genérico**: El script `scraper_fetch.py` puede usar diferentes proveedores. Actualmente configurado para Gemini, pero puede adaptarse a Firecrawl, Tavily, etc.
 
