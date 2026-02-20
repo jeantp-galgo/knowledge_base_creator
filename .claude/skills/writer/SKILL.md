@@ -321,7 +321,7 @@ Motivo de elección:
 
 ### [SINTESIS]
 
-En entre 8 y 10 líneas de prosa continua, sin subtítulos ni encabezados, abordar los siguientes aspectos:
+En entre 150 y 250 palabras de prosa continua, sin subtítulos ni encabezados, abordar los siguientes aspectos:
 para quién es ideal en {pais}, para quién no es recomendable, qué la hace emocionalmente distinta, y qué concesión principal hace el comprador.
 Si la información es insuficiente para algún aspecto: integrarlo en la síntesis con la limitación declarada.
 
