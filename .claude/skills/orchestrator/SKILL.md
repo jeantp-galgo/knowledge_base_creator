@@ -129,7 +129,11 @@ Antes de llamar al Writer, calcular estadísticas sobre las experiencias validad
 - Contar menciones de specs técnicas
 - Contar relaciones causa-efecto
 - Contar comparaciones
-- Determinar nivel de evidencia (bajo, medio, alto)
+- Determinar nivel de evidencia según los siguientes criterios:
+  - `"bajo"`: menos de 3 experiencias validadas O menos de 10 extractos totales
+  - `"medio"`: entre 3 y 7 experiencias validadas Y entre 10 y 30 extractos totales
+  - `"alto"`: 8 o más experiencias validadas O más de 30 extractos totales
+  - Si hay contradicción entre experiencias y extractos, usar el criterio más conservador (el que da nivel más bajo)
 
 **Formato de estadísticas**:
 ```json
@@ -198,9 +202,43 @@ Antes de llamar al Writer, calcular estadísticas sobre las experiencias validad
 1. Guardar Knowledge Base final en `outputs/{marca}/`
    - Crear la carpeta si no existe
    - Ruta completa: `outputs/{marca}/{marca}_{modelo}_{año}_{pais}_KB.txt`
-2. Nombre del archivo sugerido: `{marca}_{modelo}_{año}_{pais}_KB.txt`
-3. Guardar también metadatos (estadísticas, score de QA, fecha de generación) en la misma carpeta:
+2. Guardar metadatos en la misma carpeta `outputs/{marca}/`:
    - Ruta completa: `outputs/{marca}/{marca}_{modelo}_{año}_{pais}_META.json`
+   - Estructura completa del META:
+     ```json
+     {
+       "marca": "{marca}",
+       "modelo": "{modelo}",
+       "ano_solicitado": {año},
+       "ano_ficha_usada": {año real de la ficha si difiere},
+       "pais": "{pais}",
+       "tipo": "{tipo}",
+       "fecha_generacion": "YYYY-MM-DD",
+       "flujo": {
+         "scraper_intentos": 1,
+         "experiencias_recolectadas_total": 0,
+         "experiencias_re_research": 0,
+         "experiencias_validadas": 0,
+         "nota_re_research": "Sin re-research. / Descripción de lo ocurrido."
+       },
+       "estadisticas": {
+         "total_experiencias": 0,
+         "total_extractos": 0,
+         "nivel_evidencia": "bajo | medio | alto",
+         "extractos_por_categoria": {}
+       },
+       "qa": {
+         "aprobado": true,
+         "score": 0,
+         "problemas_criticos": [],
+         "advertencias": []
+       },
+       "nota_ficha": "Notas sobre la ficha técnica usada (año alternativo, tipo coincidente, etc.)",
+       "nota_validacion": "Notas sobre inconsistencias menores detectadas durante la validación (ej: valores de enum inválidos)."
+     }
+     ```
+   - `nota_ficha`: incluir siempre si se usó una ficha de año distinto al solicitado
+   - `nota_validacion`: incluir solo si hubo anomalías menores que no ameritaron exclusión (ej: `frecuencia_indicador` con valor no estándar)
 
 **Si el proceso falló**:
 1. Documentar el error
