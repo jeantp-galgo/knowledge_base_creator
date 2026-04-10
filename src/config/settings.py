@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuración inicial
-COUNTRY = "CO" # "MX", "CL", "CO"
+COUNTRY = "MX" # "MX", "CL", "CO"
 
 # Gemini settings
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
@@ -23,9 +23,9 @@ MONGO_SETTINGS = {
 }
 
 # Base de inventario de cada país
-CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCO.csv"
-MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseMX.csv"
-CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Documents\Galgo\Scripts\Data\historical_data\src\data\knoweldge_base\BaseCL.csv"
+CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseCO.csv"
+MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseMX.csv"
+CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseCL.csv"
 
 # Prompts
 SCRAPER_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/scraper_agent_template.md"
