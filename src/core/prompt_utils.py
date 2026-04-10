@@ -28,51 +28,26 @@ def validate_prompt_variables(prompt: str = None) -> Dict[str, Any]:
     if prompt is None:
         raise ValueError("Prompt is required")
 
-    # Variables que deberían estar reemplazadas
-    expected_variables = {
-        "{MARCA}", "{MODELO}", "{AÑO}", "{PAIS}", "{TIPO}", "{FICHA TECNICA}"
-    }
+    # Buscar placeholders en formato {PLACEHOLDER}
+    # Limitamos a letras/acentos/espacios/underscore para evitar falsos positivos con JSON.
+    pattern = r'\{[A-Za-zÁÉÍÓÚÑáéíóúñ_\s]+\}'
+    found_variables = sorted(set(re.findall(pattern, prompt)))
 
-    # Buscar todas las variables en formato {variable}
-    pattern = r'\{[A-Za-zÁÉÍÓÚÑáéíóúñ\s]+\}'
-    found_variables = set(re.findall(pattern, prompt))
-
-    # Encontrar variables que no están en la lista de esperadas (probablemente sin reemplazar)
-    # También buscar variantes comunes que podrían estar mal escritas
-    missing = []
-    for var in found_variables:
-        # Normalizar para comparar (mayúsculas, sin espacios extra)
-        var_normalized = var.upper().strip()
-        # Si no es una variable esperada, probablemente está sin reemplazar
-        if var not in expected_variables:
-            # Verificar si es una variante común mal escrita
-            variants = {
-                "{año}": "{AÑO}",
-                "{marca}": "{MARCA}",
-                "{modelo}": "{MODELO}",
-                "{pais}": "{PAIS}",
-                "{tipo}": "{TIPO}",
-                "{ficha tecnica}": "{FICHA TECNICA}",
-                "{ficha_tecnica}": "{FICHA TECNICA}"
-            }
-            if var in variants:
-                missing.append(f"{var} (debería ser {variants[var]})")
-            else:
-                missing.append(var)
+    # Cualquier placeholder encontrado en el prompt final se considera faltante.
+    # Si ya se reemplazó correctamente, found_variables debería ser vacío.
+    missing = found_variables
 
     # Opcional: encontrar ubicaciones (números de línea)
     locations = {}
     if missing:
         lines = prompt.split('\n')
         for var in missing:
-            # Extraer solo el nombre de la variable sin el mensaje de sugerencia
-            var_name = var.split(' ')[0] if ' ' in var else var
             var_locations = []
             for i, line in enumerate(lines, 1):
-                if var_name in line:
+                if var in line:
                     var_locations.append(i)
             if var_locations:
-                locations[var_name] = var_locations
+                locations[var] = var_locations
 
     return {
         "valid": len(missing) == 0,
