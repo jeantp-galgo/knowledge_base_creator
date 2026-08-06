@@ -3,34 +3,31 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# Configuración inicial
-COUNTRY = "MX" # "MX", "CL", "CO"
+# Países soportados (única fuente de verdad)
+SUPPORTED_COUNTRIES = ("CO", "MX", "CL")
+COUNTRY_NAMES = {"CO": "Colombia", "MX": "Mexico", "CL": "Chile"}
+
+# Configuración inicial (overrideable vía .env)
+COUNTRY = os.getenv("COUNTRY", "MX")
 
 # Gemini settings
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-STORE_ID = os.getenv('STORE_ID')
-KNOWLEDGE_BASE_STORE_FILENAME = "base_conocimiento_chatbot.md"
-LAST_DOCUMENT_UPLOADED = "baseconocimientochatbotmd-0f1cpkw8a81j"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview")
 
 # Directorio de la aplicación
 CURRENT_FILE = Path(__file__).resolve()
 SRC_DIR = CURRENT_FILE.parents[1]
 
-# MongoDB
-MONGO_SETTINGS = {
-    "DB_USERNAME": os.getenv("DB_USERNAME"),
-    "DB_PASSWORD": os.getenv("DB_PASSWORD"),
+# Base de inventario de cada país (CSVs generados por el proyecto historical_data)
+INVENTORY_DIR = Path(os.getenv(
+    "INVENTORY_DIR",
+    r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base",
+))
+INVENTORY_PATHS = {
+    country: Path(os.getenv(f"{country}_INVENTORY_PATH", str(INVENTORY_DIR / f"Base{country}.csv")))
+    for country in SUPPORTED_COUNTRIES
 }
 
-# Base de inventario de cada país
-CO_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseCO.csv"
-MX_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseMX.csv"
-CL_INVENTORY_PATH = r"C:\Users\JTRUJILLO\Desktop\utiles\Reportes\historical_data\src\data\knoweldge_base\BaseCL.csv"
-
-# Prompts
-SCRAPER_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/scraper_agent_template.md"
-VALIDATOR_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/validator_agent_template.md"
-VALIDATOR_RE_RESEARCH_TEMPLATE_PATH = "../src/data/input/prompts/validator_re_research_template.md"
-KNOWLEDGE_BASE_TEMPLATE_PATH = "../src/data/input/prompts/knowledge_base_template.md"
-QA_AGENT_TEMPLATE_PATH = "../src/data/input/prompts/qa_agent_template.md"
-COMPARISONS_TEMPLATE_PATH = "../src/data/input/prompts/comparisons_template.md"
+# Prompts y salida
+PROMPT_TEMPLATE_PATH = SRC_DIR / "data" / "input" / "prompts" / "direct_research_template.md"
+KB_OUTPUT_DIR = SRC_DIR / "data" / "output" / "KB"
