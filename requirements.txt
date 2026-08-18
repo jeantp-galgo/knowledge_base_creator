@@ -3,3 +3,6 @@ pandas>=2.0
 python-dotenv>=1.0
 jupyter
 ipykernel
+gspread==6.2.1
+gspread-dataframe==4.0.0
+oauth2client==4.1.3

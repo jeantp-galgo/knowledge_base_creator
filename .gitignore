@@ -106,4 +106,6 @@ ehthumbs.db
 .cursor
 trash/
 
-src/data/output/gemini/
+src/data/output/
+
+models_data_recollected

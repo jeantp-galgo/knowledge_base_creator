@@ -16,18 +16,23 @@ Editar `.env` y completar:
 
 ```env
 GEMINI_API_KEY=<tu clave de Google AI Studio>
+MKP_INVENTORY_BASE64=<JSON de la cuenta de servicio de Google Sheets, codificado en base64>
 ```
 
-### Configuracion de pais y rutas
+Para generar el valor de `MKP_INVENTORY_BASE64` a partir del JSON de la service account:
 
-Editar `src/config/settings.py`:
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("key.json"))
+```
+
+La cuenta de servicio debe tener acceso de lectura al Google Sheet **"[MKP] Base de conocimiento"**.
+
+### Configuracion de pais
+
+El inventario se lee desde el Google Sheet "[MKP] Base de conocimiento", con una pestaña por pais (`COUNTRY_TABS` en `src/sources/database/sheets/inventory.py`: `Base MX Moto`, `Base CO Moto`, `Base CL Moto`). Para elegir el pais activo, editar `src/config/settings.py`:
 
 ```python
 COUNTRY = "CO"  # "CO" | "MX" | "CL"
-
-CO_INVENTORY_PATH = r"C:\ruta\a\BaseCO.csv"
-MX_INVENTORY_PATH = r"C:\ruta\a\BaseMX.csv"
-CL_INVENTORY_PATH = r"C:\ruta\a\BaseCL.csv"
 ```
 
 ### Instalacion
@@ -48,7 +53,7 @@ pip install -r requirements.txt
 
 1. Verificar que `COUNTRY` en `settings.py` corresponde al pais que quieres procesar
 2. Ejecutar **Celda 1** — imports e inicializacion de Gemini e Inventory
-3. Ejecutar **Celda 2** — carga el DataFrame del CSV del pais configurado
+3. Ejecutar **Celda 2** — carga el DataFrame del inventario (Google Sheets) del pais configurado
 4. En **Celda 3**, cambiar el `code` al modelo que quieres procesar:
    ```python
    df_modelo = df_data_base[df_data_base["code"] == "CO2961-hero-hunk-125-r"]
@@ -70,11 +75,11 @@ Ejemplo: `CO-Hero_Hunk 125 R-direct.md`
 
 ## Agregar un nuevo pais
 
-1. Agregar la ruta del CSV en `settings.py`:
+1. Agregar la pestaña del Sheet en `COUNTRY_TABS` (`src/sources/database/sheets/inventory.py`):
    ```python
-   PE_INVENTORY_PATH = r"C:\ruta\a\BasePE.csv"
+   COUNTRY_TABS = {..., "PE": "Base PE Moto"}
    ```
-2. Agregar el case en `Inventory.load_db_from_country_selected()`
+2. Agregar el codigo a `SUPPORTED_COUNTRIES` y `COUNTRY_NAMES` en `settings.py`
 3. Agregar el mapeo de codigo a nombre en el diccionario del notebook:
    ```python
    PAIS = {"CO": "Colombia", "MX": "Mexico", "CL": "Chile", "PE": "Peru"}.get(COUNTRY)
@@ -87,6 +92,6 @@ Ejemplo: `CO-Hero_Hunk 125 R-direct.md`
 | Situacion | Comportamiento | Solucion |
 |---|---|---|
 | Gemini bloquea por recitation | `GeminiProcessor` reintenta automaticamente con instruccion de parafraseo | No requiere accion manual |
-| Modelo con codigo incorrecto | El DataFrame `df_modelo` queda vacio y las celdas siguientes fallan con KeyError | Verificar el `code` en el CSV de inventario |
+| Modelo con codigo incorrecto | El DataFrame `df_modelo` queda vacio y las celdas siguientes fallan con KeyError | Verificar el `code` en el inventario (Google Sheets) |
 | KB con muchos "Sin datos suficientes" | Ocurre en modelos con poca presencia en foros del pais; Gemini lo declara en `[LIMITACIONES]` | Revisar la KB — la seccion `[LIMITACIONES]` indica que mercados se consultaron |
 | Quiero ajustar el comportamiento de la investigacion | El prompt esta en `src/data/input/prompts/direct_research_template.md` | Editar el template directamente; los cambios aplican en la siguiente ejecucion |

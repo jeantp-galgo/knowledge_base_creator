@@ -1,10 +1,13 @@
 from google import genai
-import re
+
+from src.config import settings
+from src.core.exceptions import GeminiEmptyResponseError
+
 
 class GeminiProcessor:
-    def __init__(self):
+    def __init__(self, model: str | None = None):
         self.client = genai.Client()
-        self.model = 'gemini-3-pro-preview'
+        self.model = model or settings.GEMINI_MODEL
 
     def send_prompt(self, prompt:str) -> str:
         try:
@@ -41,11 +44,12 @@ class GeminiProcessor:
 
     def get_response(self, interaction) -> str:
         final_output = ""
-        try:
-            for output in interaction.outputs:
-                if hasattr(output, "text"):
-                    final_output += output.text
-            return final_output
-        except Exception as e:
-            return f"Error processing interaction outputs: {e}"
+        for output in interaction.outputs:
+            if hasattr(output, "text"):
+                final_output += output.text
+        if not final_output.strip():
+            raise GeminiEmptyResponseError(
+                "Gemini no devolvió texto en la interacción; no se genera el KB."
+            )
+        return final_output
 
